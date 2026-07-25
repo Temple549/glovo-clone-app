@@ -1,39 +1,54 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import helmet from "helmet";
-import pinoHttp from "pino-http";
-import { apiRouter } from "./routes/index.js";
-
-import { corsMiddleware } from "./config/cors";
-import { errorMiddleware } from "./middleware/error.middleware";
-import { notFoundMiddleware } from "./middleware/not-found.middleware";
-import { requestIdMiddleware } from "./middleware/request-id.middleware";
-import { logger } from "./utils/logger.js";
+import {pinoHttp} from "pino-http";
 import cookieParser from "cookie-parser";
+import { IncomingMessage, ServerResponse } from "http";
 
 
+// Note: Ensure all local imports use the .js extension for ESM compatibility in production
+import { apiRouter } from "./routes/index.js";
+import { corsMiddleware } from "./config/cors.js";
+import { errorMiddleware } from "./middleware/error.middleware.js";
+import { notFoundMiddleware } from "./middleware/not-found.middleware.js";
+import { logger } from "./utils/logger.js";
 
 const app = express();
 
 app.disable("x-powered-by");
 
-app.use(requestIdMiddleware);
+// 1. Request Tracking & Logging
+
 app.use(
   pinoHttp({
     logger,
-    customProps: (request) => ({
-      requestId: request.requestId
+    // Fix 1: Use 'customProps' as suggested by the error message
+    // Fix 2: Explicitly type 'req' and 'res' to fix the 'implicit any' error
+    customProps: (req: Request, _res: Response) => ({
+      requestId: (req as any).requestId
     })
   })
 );
+
+
+// 2. Security & Parsing Middleware
 app.use(helmet());
 app.use(corsMiddleware);
+app.use(cookieParser());
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
-app.use(cookieParser());
 
+// 3. Render Health Check Routes
+// This specific route handles the HEAD/GET requests Render sends to "/"
+app.get("/", (_req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "Food Delivery API is live",
+    timestamp: new Date().toISOString()
+  });
+});
 
-app.get("/health", (_request, response) => {
-  response.status(200).json({
+app.get("/health", (_req: Request, res: Response) => {
+  res.status(200).json({
     success: true,
     data: {
       status: "ok",
@@ -42,12 +57,10 @@ app.get("/health", (_request, response) => {
   });
 });
 
+// 4. API Routes
 app.use("/api", apiRouter);
 
-app.use(notFoundMiddleware);
-app.use(errorMiddleware);
-
-
+// 5. Error Handling (Only call these ONCE)
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
