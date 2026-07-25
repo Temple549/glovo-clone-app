@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/.vercel/
+
+# Backend build output
+backend/dist/
+backend/coverage/
+
+# Frontend coverage
+frontend/coverage/
+
+# Logs
+*.log
+logs/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Test artifacts
+.nyc_output/
+playwright-report/
+test-results/
