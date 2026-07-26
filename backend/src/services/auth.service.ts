@@ -5,6 +5,7 @@ import { hashPassword, verifyPassword } from "../utils/password.js";
 import { signAuthToken } from "../utils/token.js";
 import { AppError } from "../utils/app-error.js";
 import type { AuthenticatedUser } from "../types/auth.types.js";
+import { enqueueEmail } from "../queues/email.queue.js";
 
 function toAuthenticatedUser(user: UserDocument): AuthenticatedUser {
   return {
@@ -58,6 +59,12 @@ export async function registerUser(
     sub: authenticatedUser.id,
     role: authenticatedUser.role
   });
+  // Enqueue welcome email (falls back to immediate send if Redis not configured)
+  void enqueueEmail(
+    user.email,
+    "Welcome to Food Delivery!",
+    `<p>Hi ${user.name},</p><p>Thanks for registering at Food Delivery. We're excited to have you on board.</p>`
+  );
 
   return {
     user: authenticatedUser,

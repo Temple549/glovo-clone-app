@@ -16,12 +16,7 @@ import {
 
 const authRouter = Router();
 
-authRouter.post(
-  "/register",
-  validateBody(registerSchema),
-  registerController
-);
-
+// Registration (rate-limited)
 authRouter.post(
   "/register",
   authRateLimit,
@@ -29,15 +24,13 @@ authRouter.post(
   registerController
 );
 
+// Login (rate-limited)
 authRouter.post(
   "/login",
   authRateLimit,
   validateBody(loginSchema),
   loginController
 );
-
-
-authRouter.post("/login", validateBody(loginSchema), loginController);
 
 authRouter.post("/logout", logoutController);
 

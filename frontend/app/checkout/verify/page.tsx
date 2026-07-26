@@ -28,7 +28,7 @@ export default function VerifyPaymentPage() {
       toast('Payment successful! Order placed.', 'success');
       // Redirect to order details or order history after a short delay
       setTimeout(() => {
-        router.push(`/orders/${data.orderId}`);
+        router.push(`/orders/${data.data.orderId}`);
       }, 2000);
     },
     onError: () => {

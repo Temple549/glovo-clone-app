@@ -30,7 +30,7 @@ export default function CheckoutPage() {
     onSuccess: (data) => {
       // Hard redirect to Paystack. This clears all local React state.
       // When the user returns, they will hit the /checkout/verify route.
-      window.location.href = data.authorization_url;
+      window.location.href = data.data.authorization_url;
     },
     onError: (error) => {
       toast(error.message || 'Failed to initialize payment. Please try again.', 'error');

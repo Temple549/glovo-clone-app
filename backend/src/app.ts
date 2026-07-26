@@ -34,7 +34,16 @@ app.use(
 app.use(helmet());
 app.use(corsMiddleware);
 app.use(cookieParser());
-app.use(express.json({ limit: "1mb" }));
+// Capture raw body for webhook signature verification while still parsing JSON
+app.use(
+  express.json({
+    limit: "1mb",
+    verify: (req: any, _res, buf: Buffer) => {
+      // store raw body buffer for later signature verification
+      req.rawBody = buf;
+    }
+  })
+);
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 
 // 3. Render Health Check Routes

@@ -2,6 +2,7 @@ import { connectDatabase, disconnectDatabase } from "./config/database.js";
 import { env } from "./config/env.js";
 import { app } from "./app.js";
 import { logger } from "./utils/logger.js";
+import { startEmailWorker, stopEmailWorker } from "./queues/worker.js";
 
 async function startServer(): Promise<void> {
   await connectDatabase();
@@ -27,6 +28,7 @@ async function startServer(): Promise<void> {
 
       try {
         await disconnectDatabase();
+        stopEmailWorker();
       } catch (databaseError) {
         logger.error(
           { err: databaseError },
@@ -50,3 +52,6 @@ startServer().catch((error: unknown) => {
   logger.fatal({ err: error }, "Backend failed to start");
   process.exit(1);
 });
+
+// Start background workers (if configured)
+startEmailWorker();

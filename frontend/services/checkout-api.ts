@@ -9,10 +9,24 @@ interface InitCheckoutPayload {
   formData: CheckoutFormData;
 }
 
+interface VerifyResponse {
+  success: boolean;
+  data: {
+    orderId: string;
+  };
+  message: string;
+}
+
 export const checkoutApi = {
-  initializePayment: (payload: InitCheckoutPayload) =>
-    apiClient.post<PaystackResponse>('/checkout/pay', payload),
+  initializePayment: (payload: InitCheckoutPayload) => {
+    // Transform frontend payload to backend-expected format
+    const body = {
+      deliveryAddress: payload.formData.address,
+      customerContact: payload.formData.phone,
+    };
+    return apiClient.post<PaystackResponse>('/checkout/pay', body);
+  },
 
   verifyPayment: (reference: string) =>
-    apiClient.get<{ message: string; orderId: string }>(`/checkout/verify?reference=${reference}`),
+    apiClient.get<VerifyResponse>(`/checkout/verify?reference=${reference}`),
 };

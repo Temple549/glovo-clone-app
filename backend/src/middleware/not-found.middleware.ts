@@ -1,9 +1,12 @@
 import type { RequestHandler } from "express";
+import { AppError } from "../utils/app-error.js";
 
 export const notFoundMiddleware: RequestHandler = (request, _response, next) => {
-  next({
-    statusCode: 404,
-    code: "ROUTE_NOT_FOUND",
-    message: `Route ${request.method} ${request.originalUrl} was not found.`
-  });
+  next(
+    new AppError(
+      404,
+      "ROUTE_NOT_FOUND",
+      `Route ${request.method} ${request.originalUrl} was not found.`
+    )
+  );
 };

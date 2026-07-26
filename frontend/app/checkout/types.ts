@@ -17,7 +17,9 @@ export const checkoutSchema = z.object({
 export type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 export interface PaystackResponse {
-  authorization_url: string;
-  access_code: string;
-  reference: string;
+  success: boolean;
+  data: {
+    authorization_url: string;
+    reference: string;
+  };
 }

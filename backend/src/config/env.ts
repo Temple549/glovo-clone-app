@@ -17,8 +17,10 @@ const envSchema = z.object({
   PAYSTACK_SECRET_KEY: z.string().optional(),
   PAYSTACK_PUBLIC_KEY: z.string().optional(),
   PAYSTACK_WEBHOOK_SECRET: z.string().optional(),
+  PAYSTACK_CALLBACK_URL: z.string().optional(),
 
   RESEND_API_KEY: z.string().optional(),
+    REDIS_URL: z.string().optional(),
   EMAIL_FROM: z.string().optional(),
 
   SEED_CUSTOMER_PASSWORD: z.string().min(8).optional(),
