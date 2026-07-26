@@ -2,11 +2,15 @@
 
 export interface Vendor {
   _id: string;
-  name: string;
+  name?: string;
+  businessName?: string;
   description: string;
-  image: string;
-  deliveryTime: string; 
-  rating: number;
+  image?: string;
+  imageUrl?: string;
+  cuisine?: string;
+  address?: string;
+  deliveryTime?: string;
+  rating?: number;
   isOpen: boolean;
 }
 
@@ -16,9 +20,10 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  image: string;
+  image?: string;
+  imageUrl?: string;
   isAvailable: boolean;
-  category: string; // <--- THIS MUST BE HERE
+  category: string;
 }
 
 export interface CartItem {

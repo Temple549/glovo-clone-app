@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafafa;
+  --foreground: #0f172a;
 }
 
 * {
@@ -11,6 +11,7 @@
 
 html {
   min-height: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -18,29 +19,72 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-/* app/globals.css */
+/* Custom scrollbar hiding for horizontal category list */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
-/* ... your existing Tailwind imports ... */
-
-@layer utilities {
-  @keyframes shimmer-bar {
-    0% {
-      transform: translateX(-100%);
-      width: 100%;
-    }
-    50% {
-      width: 60%;
-    }
-    100% {
-      transform: translateX(400%);
-      width: 100%;
-    }
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
   }
-
-  .animate-shimmer-bar {
-    animation: shimmer-bar 1.5s ease-in-out infinite;
+  50% {
+    transform: translateY(-12px) rotate(4deg);
   }
 }
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-3deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(249, 115, 22, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(249, 115, 22, 0.45);
+  }
+}
+
+@keyframes shimmer-bar {
+  0% {
+    transform: translateX(-100%);
+    width: 100%;
+  }
+  50% {
+    width: 60%;
+  }
+  100% {
+    transform: translateX(400%);
+    width: 100%;
+  }
+}
+
+.animate-float {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-shimmer-bar {
+  animation: shimmer-bar 1.5s ease-in-out infinite;
+}
+

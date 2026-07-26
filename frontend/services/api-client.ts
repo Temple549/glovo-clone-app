@@ -6,7 +6,7 @@ type ApiClientOptions = Omit<RequestInit, 'body'> & {
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api');
+  (process.env.NODE_ENV === 'production' ? '/api' : 'https://glovo-clone-app.onrender.com');
 
 class ApiClient {
   private baseUrl: string;
