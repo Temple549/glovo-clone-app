@@ -4,7 +4,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Mail, Lock, Loader2, UtensilsCrossed, User, Store } from 'lucide-react';
+import { Mail, Lock, Loader2, UtensilsCrossed, User, Store, UserRound } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 import { apiClient } from '@/services/api-client';
@@ -74,11 +74,19 @@ export default function RegisterPage() {
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">
-            Or{' '}
-            <Link href="/login" className="font-medium text-orange-600 hover:text-orange-500">
-              sign in to your existing account
-            </Link>
+            Choose a customer account or open a vendor account for your restaurant.
           </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm">
+          <Link href="/register" className="flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-3 py-2.5 text-sm font-semibold text-white">
+            <UserRound className="h-4 w-4" />
+            Customer
+          </Link>
+          <Link href="/vendor/register" className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+            <Store className="h-4 w-4" />
+            Vendor
+          </Link>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
@@ -189,7 +197,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div>
+          <div className="space-y-3">
             <button
               type="submit"
               disabled={registerMutation.isPending}
@@ -204,6 +212,13 @@ export default function RegisterPage() {
                 'Create account'
               )}
             </button>
+
+            <div className="text-center text-sm text-gray-600">
+              Already have an account?{' '}
+              <Link href="/login" className="font-semibold text-orange-600 hover:text-orange-500">
+                Sign in
+              </Link>
+            </div>
           </div>
         </form>
       </div>

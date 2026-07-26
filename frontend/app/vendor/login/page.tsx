@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Mail, Lock, Loader2, Store } from 'lucide-react';
+import { Mail, Lock, Loader2, Store, ArrowRight } from 'lucide-react';
 import { loginSchema, LoginCredentials } from '@/types/types';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/components/ui/toaster';
@@ -26,11 +26,12 @@ export default function VendorLoginPage() {
 
   useEffect(() => {
     if (isHydrated && isAuthenticated && user) {
-      toast('Welcome back to the Hub!', 'success');
+      toast('Welcome back to the Vendor Portal!', 'success');
       if (user.role === 'vendor') {
         router.push('/vendor/dashboard/products');
+      } else if (user.role === 'admin') {
+        router.push('/admin');
       } else {
-        // If a customer accidentally ends up here, send them back to the main site
         router.push('/');
       }
     }
@@ -43,110 +44,117 @@ export default function VendorLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-900">
+    <div className="min-h-screen flex bg-slate-950">
       {/* Left Side - Branding / Hidden on Mobile */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-800 to-slate-900 p-12 flex-col justify-between relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-        <div>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-orange-500 rounded-lg">
-              <Store className="w-8 h-8 text-white" />
+      <div className="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-slate-900 via-slate-900 to-orange-950 p-12 flex-col justify-between relative overflow-hidden border-r border-slate-800">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-10">
+            <div className="p-2.5 bg-gradient-to-tr from-orange-500 to-amber-500 rounded-xl text-white shadow-lg">
+              <Store className="w-7 h-7" />
             </div>
-            <span className="text-2xl font-bold text-white">Vendor Hub</span>
+            <span className="text-2xl font-black text-white tracking-tight">FoodieXpress <span className="text-orange-400">Vendor</span></span>
           </div>
-          <h2 className="text-4xl font-extrabold text-white leading-tight">
-            Manage your restaurant,<br />
-            <span className="text-orange-400">your way.</span>
+
+          <h2 className="text-4xl font-black text-white leading-tight">
+            Manage your restaurant & <span className="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">grow sales.</span>
           </h2>
-          <p className="mt-4 text-slate-400 max-w-md">
-            Update menus in seconds, track incoming orders in real-time, and grow your business on our platform.
+          <p className="mt-4 text-slate-300 max-w-md text-sm leading-relaxed">
+            Update menus in seconds, track incoming customer orders in real-time, and monitor revenue with your vendor dashboard.
           </p>
         </div>
-        <p className="text-slate-500 text-sm">© 2024 FoodieXpress Vendor Portal.</p>
+
+        <div className="relative z-10">
+          <p className="text-slate-500 text-xs">© 2024 FoodieXpress Vendor Portal.</p>
+        </div>
       </div>
 
       {/* Right Side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
-            <div className="p-2 bg-slate-900 rounded-lg">
-              <Store className="w-6 h-6 text-orange-400" />
-            </div>
-            <span className="text-xl font-bold text-slate-900">Vendor Hub</span>
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-slate-900">
+        <div className="w-full max-w-md bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
+          
+          {/* Top Switcher Banner to Customer Login */}
+          <div className="mb-6 p-3 bg-slate-800/80 rounded-2xl border border-slate-700/60 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-300">Looking to order food?</span>
+            <Link
+              href="/login"
+              className="text-xs font-bold text-orange-400 hover:text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 px-3 py-1.5 rounded-xl transition-all"
+            >
+              Customer Login →
+            </Link>
           </div>
 
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Welcome back</h1>
-          <p className="text-slate-500 mb-8">
-            Don't have an account?{' '}
-            <Link href="/register" className="text-orange-600 font-medium hover:text-orange-700">
-              Sign up
-            </Link>
-          </p>
+          <div className="mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold mb-3">
+              <Store className="w-3.5 h-3.5" /> Vendor Partner Portal
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight">Vendor Portal Login</h1>
+            <p className="text-slate-400 text-xs mt-1">
+              Sign in to manage your products, orders, and restaurant settings.
+            </p>
+          </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {loginError && (
-              <div className="p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg">
+              <div className="p-3 text-xs text-red-400 bg-red-950/60 border border-red-800 rounded-xl">
                 {loginError.message}
               </div>
             )}
               
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">Business Email</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-slate-400" />
-                </div>
+                <Mail className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                 <input
                   type="email"
                   disabled={isLoggingIn}
-                  className={`block w-full pl-10 pr-3 py-2.5 border rounded-lg bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:bg-slate-100 ${errors.email ? 'border-red-300' : 'border-slate-200'}`}
+                  className={`w-full pl-9 pr-3 py-2.5 text-xs rounded-xl bg-slate-800 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.email ? 'border-red-500' : 'border-slate-700'}`}
                   placeholder="vendor@restaurant.com"
                   {...register('email')}
                 />
               </div>
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+              {errors.email && <p className="mt-1 text-[11px] text-red-400">{errors.email.message}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">Password</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
+                <Lock className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                 <input
                   type="password"
                   disabled={isLoggingIn}
-                  className={`block w-full pl-10 pr-3 py-2.5 border rounded-lg bg-slate-50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 disabled:bg-slate-100 ${errors.password ? 'border-red-300' : 'border-slate-200'}`}
+                  className={`w-full pl-9 pr-3 py-2.5 text-xs rounded-xl bg-slate-800 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.password ? 'border-red-500' : 'border-slate-700'}`}
                   placeholder="••••••••"
                   {...register('password')}
                 />
               </div>
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+              {errors.password && <p className="mt-1 text-[11px] text-red-400">{errors.password.message}</p>}
             </div>
 
             <button
               type="submit"
               disabled={isLoggingIn}
-              className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl text-sm transition-all shadow-lg cursor-pointer disabled:opacity-60"
             >
               {isLoggingIn ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Signing in...
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Accessing Dashboard...
                 </>
               ) : (
-                'Access Dashboard'
+                <>
+                  <span>Log In to Dashboard</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
               )}
             </button>
           </form>
 
-          {/* Add this right below the </form> closing tag */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
-              Are you a restaurant owner?{' '}
-              <Link href="/vendor/login" className="font-medium text-slate-700 hover:text-slate-900 underline underline-offset-2 transition-colors">
-                Log in to Vendor Hub
+          <div className="mt-6 text-center pt-4 border-t border-slate-800">
+            <p className="text-xs text-slate-400">
+              New restaurant partner?{' '}
+              <Link href="/vendor/register" className="font-bold text-orange-400 hover:text-orange-300">
+                Register Your Restaurant
               </Link>
             </p>
           </div>
@@ -155,4 +163,5 @@ export default function VendorLoginPage() {
     </div>
   );
 }
+
 

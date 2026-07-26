@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Mail, Lock, Loader2, UtensilsCrossed } from 'lucide-react';
+import { Mail, Lock, Loader2, UtensilsCrossed, Store, UserRound } from 'lucide-react';
 import { loginSchema, LoginCredentials } from '@/types/types';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/components/ui/toaster';
@@ -53,7 +53,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
-        {/* Header */}
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-orange-100 rounded-full">
@@ -61,14 +60,22 @@ export default function LoginPage() {
             </div>
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Welcome back
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Or{' '}
-            <Link href="/register" className="font-medium text-orange-600 hover:text-orange-500">
-              create a new account
-            </Link>
+            Sign in as a customer or continue as a restaurant partner.
           </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm">
+          <Link href="/login" className="flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-3 py-2.5 text-sm font-semibold text-white">
+            <UserRound className="h-4 w-4" />
+            Customer
+          </Link>
+          <Link href="/vendor/login" className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+            <Store className="h-4 w-4" />
+            Vendor
+          </Link>
         </div>
 
         {/* Form */}
@@ -135,8 +142,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div>
+          <div className="space-y-3">
             <button
               type="submit"
               disabled={isLoggingIn}
@@ -151,6 +157,13 @@ export default function LoginPage() {
                 'Sign in'
               )}
             </button>
+
+            <div className="text-center text-sm text-gray-600">
+              New here?{' '}
+              <Link href="/register" className="font-semibold text-orange-600 hover:text-orange-500">
+                Create customer account
+              </Link>
+            </div>
           </div>
         </form>
       </div>
