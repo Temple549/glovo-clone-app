@@ -9,12 +9,14 @@ import { CartDrawer } from '@/components/shared/cart-drawer';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { useAuthStore, AuthState } from '@/store/auth.store';
 
-// Initialize QueryClient OUTSIDE the component to preserve state across renders
 const queryClient = new QueryClient();
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const hydrateUser = useAuthStore((state: AuthState) => state.hydrateUser);
+  
+  // Wait for hydration AND get the exact boolean to pass to Navbar
+  const isHydrated = useAuthStore((state: AuthState) => state.isHydrated);
 
   useEffect(() => {
     hydrateUser();
@@ -29,10 +31,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
-        <Navbar />
+        {/* PASS isHydrated TO NAVBAR HERE */}
+        <Navbar isHydrated={isHydrated} />
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         
-        {/* pb-16 ensures mobile content isn't hidden behind the fixed bottom nav */}
         <main className="pb-16 md:pb-0">
           {children}
         </main>

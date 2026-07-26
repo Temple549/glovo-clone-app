@@ -6,9 +6,14 @@ import { useAuth } from '@/hooks/use-auth';
 import { useCartStore } from '@/store/cart.store';
 import { UtensilsCrossed, ShoppingCart, LogOut, User, Store, Shield } from 'lucide-react';
 
-export function Navbar() {
-  const { user, isAuthenticated, isHydrated, logout } = useAuth();
+interface NavbarProps {
+  isHydrated?: boolean;
+}
+
+export function Navbar({ isHydrated: hydratedProp }: NavbarProps) {
+  const { user, isAuthenticated, isHydrated: authIsHydrated, logout } = useAuth();
   const itemCount = useCartStore((state) => state.itemCount());
+  const isHydrated = hydratedProp ?? authIsHydrated;
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
