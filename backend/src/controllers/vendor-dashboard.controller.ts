@@ -30,10 +30,25 @@ export const updateMyVendorProfile: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Get vendor's own products
+export const getMyProducts: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.vendorId) {
+      return next(new AppError(403, "VENDOR_REQUIRED", "Vendor profile is required."));
+    }
+
+    const products = await ProductModel.find({ vendorId: req.vendorId }).sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, data: products });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Create a product
 export const createProduct: RequestHandler = async (req, res, next) => {
   try {
-    const { name, description, price, category, imageUrl } = req.body;
+    const { name, description, price, category, image, imageUrl, isAvailable } = req.body;
 
     // Fixed: Guard check for vendorId to satisfy strict typing
     if (!req.vendorId) {
@@ -46,8 +61,8 @@ export const createProduct: RequestHandler = async (req, res, next) => {
       description: description as string,
       price: Number(price),
       category: category as string,
-      imageUrl: (imageUrl as string) ?? "",
-      isAvailable: true
+      imageUrl: (image || imageUrl as string) ?? "",
+      isAvailable: isAvailable ?? true
     });
 
     res.status(201).json({ success: true, data: product });
